@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress
+  namespace: default
+  labels:
+    app: wordpress
+spec:
+  selector:
+    matchLabels:
+      app: wordpress
+  template:
+    metadata:
+      labels:
+        app: wordpress
+    spec:
+      containers:
+        - name: wp-container
+          image: microsoft/multicontainerwordpress
+          envFrom:
+            - configMapRef:
+                name: wp-cm
+          env:
+            - name: WORDPRESS_DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: az-k8s-mysql-server # <-- Secret Name
+                  key: fullyQualifiedServerName # <-- Secret Key
+            - name: WORDPRESS_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: az-k8s-mysql-server # <-- Secret Name
+                  key: password # <-- Secret Key
+            - name: WORDPRESS_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: az-k8s-mysql-server # <-- Secret Name
+                  key: fullyQualifiedUsername # <-- Secret Key
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: wp-persistent-storage
+              mountPath: /var/www/html
+
+      volumes:
+        - name: wp-persistent-storage
+          persistentVolumeClaim:
+            claimName: wp-storage
