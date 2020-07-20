@@ -8,23 +8,31 @@ Azure Subscription
 
 2.) Follow the instructions here to deploy the latest version of Azure Service Operator on your Kubernetes cluster.
    Bare in mind, A.S.O is still in beta and not recommended for production environments.
-   Steps are simple: a) deploy cert-manager, b) install Helm3 (if you dont have it already ;)), install ASO using Helm
+   Steps are simple: a) deploy cert-manager, b) install Helm3 (if you dont have it already ;)), install ASO using Helm.
+
    <https://github.com/Azure/azure-service-operator>
 
 3.) `kubectl get pods -n azureoperator-system`
+
     If all good, you must see something like this:
+
     `NAME                                                READY   STATUS    RESTARTS   AGE`
     `azureoperator-controller-manager-5cfd5b7c4c-n9fsv   2/2     Running   0          2d15h`
 
-4.) `kubectl get crds` will show the available custom resource definitions.
+4.) `kubectl get crds` 
+     will show the available custom resource definitions.
 
 In simple words, you have a k8s custom resource running in your local cluster.
 This custom resource can access your Azure subscription and provision/manage azure resources defined in yaml.
 
 5.) Create a resource group to verify that everything works as expected:
+
    `mkdir aso-test`
+
    `cd aso-test`
+
    `touch az-rg.yaml`
+
    Open the az-rg.yaml with your editor and add this:
 
    ```YAML
@@ -36,8 +44,9 @@ This custom resource can access your Azure subscription and provision/manage azu
       location: "northeurope"
    ```
 
-6.) ~ /aso-test > `kubectl apply -f .`   Check your subscription, you must have a resource group: az-k8s-operator
-                  > resourcegroup.azure.microsoft.com/az-k8s-operator created
+6.) ~ /aso-test > `kubectl apply -f .`  
+    Check your subscription, you must have a resource group: az-k8s-operator
+                 `> resourcegroup.azure.microsoft.com/az-k8s-operator created`
 
 7.) Time to move faster. Inside your aso-test dir, create a yaml file for every definition and add each one of these:
 
@@ -58,9 +67,9 @@ This custom resource can access your Azure subscription and provision/manage azu
         family: Gen5
         size: "51200"
         capacity: 4
-    ```
----
-    ```YAML
+   ```
+
+   ```YAML
      apiVersion: azure.microsoft.com/v1alpha1
      kind: MySQLDatabase
      metadata:
@@ -68,9 +77,8 @@ This custom resource can access your Azure subscription and provision/manage azu
      spec:
        resourceGroup: az-k8s-operator
        server: az-k8s-mysql-server
+   ```
 
-    ```
----
    ```YAML
     apiVersion: azure.microsoft.com/v1alpha1
     kind: MySQLFirewallRule
@@ -83,14 +91,18 @@ This custom resource can access your Azure subscription and provision/manage azu
       endIpAddress: 255.255.255.255
    ```
 
-8.) `kubectl apply -f .` # Create the azure resources.
+8.) `kubectl apply -f .`
+     # Create the azure resources.
+
      > mysqldatabase.azure.microsoft.com/az-k8s-mysql-db created
        mysqlfirewallrule.azure.microsoft.com/az-k8s-mysql-frwl-rl created
        mysqlserver.azure.microsoft.com/az-k8s-mysql-server created
        resourcegroup.azure.microsoft.com/az-k8s-operator unchanged
 
 9.) With the resources up and running, a Secret is created:
-    `kubectl get secrets`
+
+   `kubectl get secrets`
+
     > NAME                  TYPE                                  DATA   AGE
       az-k8s-mysql-server   Opaque                                4      4s
     `kubectl describe secret az-k8s-mysql-server`
@@ -218,9 +230,13 @@ This custom resource can access your Azure subscription and provision/manage azu
         define('WP_REDIS_HOST', 'redis-service');
 
    ```
-12.) `kubectl delete -f .` To delete the existing resources. Give it a couple of minutes
-        and verify the Azure resources have been deleted.
-     `kubectl apply -f .` To create the Deployment with the Azure Resources.
+12.) `kubectl delete -f .` 
+      To delete the existing resources. Give it a couple of minutes
+      and verify the Azure resources have been deleted.
+
+   `kubectl apply -f .` 
+    To create the Deployment with the Azure Resources.
+
       > mysqldatabase.azure.microsoft.com/az-k8s-mysql-db created
         mysqlfirewallrule.azure.microsoft.com/az-k8s-mysql-frwl-rl created
         mysqlserver.azure.microsoft.com/az-k8s-mysql-server created
@@ -229,7 +245,9 @@ This custom resource can access your Azure subscription and provision/manage azu
         deployment.apps/wordpress created
         persistentvolumeclaim/wp-storage created
         service/wp-service created
-      `kubectl get deployments --watch`
+
+   `kubectl get deployments --watch`
+
        > NAME        READY   UP-TO-DATE   AVAILABLE   AGE
          wordpress   0/1     0            0           0s
          wordpress   0/1     0            0           0s
@@ -238,5 +256,7 @@ This custom resource can access your Azure subscription and provision/manage azu
          wordpress   1/1     1            1           2m57s
 
 In Azure Portal, check the activity log in the Resource Group, to visualize what happens in the background.
+
 Check the Service and click <http://localhost:80> to access the WP instalation page.
+
 If, after Deployment is completed you see a database connection error, give it 30 seconds and try again.
