@@ -1,20 +1,24 @@
 # Kubernetes: Azure Service Operators
 
 env:
+
 docker-for-desktop
+
 Azure Subscription
 
 1.) Enable Kubernetes
 
 2.) Follow the instructions here to deploy the latest version of Azure Service Operator on your Kubernetes cluster.
+
    Bare in mind, A.S.O is still in beta and not recommended for production environments.
+
    Steps are simple: a) deploy cert-manager, b) install Helm3 (if you dont have it already ;)), install ASO using Helm.
 
    <https://github.com/Azure/azure-service-operator>
 
 3.) `kubectl get pods -n azureoperator-system`
 
-    If all good, you must see something like this:
+   If all good, you must see something like this:
 
      NAME                                                READY   STATUS    RESTARTS   AGE
      azureoperator-controller-manager-5cfd5b7c4c-n9fsv   2/2     Running   0          2d15h
@@ -45,7 +49,9 @@ This custom resource can access your Azure subscription and provision/manage azu
    ```
 
 6.) ~ /aso-test > `kubectl apply -f .`  
+
     Check your subscription, you must have a resource group: az-k8s-operator
+    
     `> resourcegroup.azure.microsoft.com/az-k8s-operator created`
 
 7.) Time to move faster. Inside your aso-test dir, create a yaml file for every definition and add each one of these:
