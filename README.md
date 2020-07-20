@@ -50,9 +50,9 @@ This custom resource can access your Azure subscription and provision/manage azu
 
 6.) ~ /aso-test > `kubectl apply -f .`  
 
-    Check your subscription, you must have a resource group: az-k8s-operator
-    
-    `> resourcegroup.azure.microsoft.com/az-k8s-operator created`
+  `> resourcegroup.azure.microsoft.com/az-k8s-operator created`
+
+ Check your subscription, you must have a resource group: az-k8s-operator
 
 7.) Time to move faster. Inside your aso-test dir, create a yaml file for every definition and add each one of these:
 
@@ -136,7 +136,7 @@ This custom resource can access your Azure subscription and provision/manage azu
      to create a WP intallation. The Deployment will wait for the resources to be created and then will
      deploy the WP Pod(s).
 
-    ```YAML
+   ```YAML
       apiVersion: apps/v1
       kind: Deployment
       metadata:
@@ -189,7 +189,8 @@ This custom resource can access your Azure subscription and provision/manage azu
               - name: wp-persistent-storage
                 persistentVolumeClaim:
                   claimName: wp-storage
-    ```
+   ```
+
 11.) Here is the Service, the PVC and the ConfigMap for the Deployment.
 
    ```YAML
@@ -240,8 +241,8 @@ This custom resource can access your Azure subscription and provision/manage azu
 
    ```
 12.) `kubectl delete -f .`
-      To delete the existing resources. Give it a couple of minutes
-      and verify the Azure resources have been deleted.
+
+    Delete the existing resources.
 
    `kubectl apply -f .`
     To create the Deployment with the Azure Resources.
