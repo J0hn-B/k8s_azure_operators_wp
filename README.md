@@ -18,16 +18,7 @@ Azure Subscription
 
 3.) `kubectl get pods -n azureoperator-system`
 
-   If all good, you must see something like this:
-
-     NAME                                                READY   STATUS    RESTARTS   AGE
-     azureoperator-controller-manager-5cfd5b7c4c-n9fsv   2/2     Running   0          2d15h
-
 4.) `kubectl get crds`
-     will show the available custom resource definitions.
-
-In simple words, you have a k8s custom resource running in your local cluster.
-This custom resource can access your Azure subscription and provision/manage azure resources defined in yaml.
 
 5.) Create a resource group to verify that everything works as expected:
 
@@ -37,7 +28,7 @@ This custom resource can access your Azure subscription and provision/manage azu
 
    `touch az-rg.yaml`
 
-   Open the az-rg.yaml with your editor and add this:
+   Open the az-rg.yaml with your favourite editor and add this:
 
    ```YAML
     apiVersion: azure.microsoft.com/v1alpha1
@@ -50,11 +41,9 @@ This custom resource can access your Azure subscription and provision/manage azu
 
 6.) ~ /aso-test > `kubectl apply -f .`  
 
-  `> resourcegroup.azure.microsoft.com/az-k8s-operator created`
-
  Check your subscription, you must have a resource group: az-k8s-operator
 
-7.) Time to move faster. Inside your aso-test dir, create a yaml file for every definition and add each one of these:
+7.) Inside your aso-test dir, create a yaml file for every definition and add each one of these:
 
    ```YAML
     apiVersion: azure.microsoft.com/v1alpha1
@@ -98,19 +87,13 @@ This custom resource can access your Azure subscription and provision/manage azu
    ```
 
 8.) `kubectl apply -f .`
-     # Create the azure resources.
-
-     > mysqldatabase.azure.microsoft.com/az-k8s-mysql-db created
-       mysqlfirewallrule.azure.microsoft.com/az-k8s-mysql-frwl-rl created
-       mysqlserver.azure.microsoft.com/az-k8s-mysql-server created
-       resourcegroup.azure.microsoft.com/az-k8s-operator unchanged
 
 9.) With the resources up and running, a Secret is created:
 
    `kubectl get secrets`
 
-    > NAME                  TYPE                                  DATA   AGE
-      az-k8s-mysql-server   Opaque                                4      4s
+    > NAME                 TYPE      DATA   AGE
+      az-k8s-mysql-server   Opaque    4      4s
 
    `kubectl describe secret az-k8s-mysql-server`
 
@@ -191,7 +174,7 @@ This custom resource can access your Azure subscription and provision/manage azu
                   claimName: wp-storage
    ```
 
-11.) Here is the Service, the PVC and the ConfigMap for the Deployment.
+11.) The Service, the PVC and the ConfigMap for the Deployment.
 
    ```YAML
     apiVersion: v1
