@@ -16,10 +16,10 @@ Azure Subscription
 
     If all good, you must see something like this:
 
-    `NAME                                                READY   STATUS    RESTARTS   AGE`
-    `azureoperator-controller-manager-5cfd5b7c4c-n9fsv   2/2     Running   0          2d15h`
+     NAME                                                READY   STATUS    RESTARTS   AGE
+     azureoperator-controller-manager-5cfd5b7c4c-n9fsv   2/2     Running   0          2d15h
 
-4.) `kubectl get crds` 
+4.) `kubectl get crds`
      will show the available custom resource definitions.
 
 In simple words, you have a k8s custom resource running in your local cluster.
@@ -46,7 +46,7 @@ This custom resource can access your Azure subscription and provision/manage azu
 
 6.) ~ /aso-test > `kubectl apply -f .`  
     Check your subscription, you must have a resource group: az-k8s-operator
-                 `> resourcegroup.azure.microsoft.com/az-k8s-operator created`
+    `> resourcegroup.azure.microsoft.com/az-k8s-operator created`
 
 7.) Time to move faster. Inside your aso-test dir, create a yaml file for every definition and add each one of these:
 
@@ -105,7 +105,9 @@ This custom resource can access your Azure subscription and provision/manage azu
 
     > NAME                  TYPE                                  DATA   AGE
       az-k8s-mysql-server   Opaque                                4      4s
-    `kubectl describe secret az-k8s-mysql-server`
+
+   `kubectl describe secret az-k8s-mysql-server`
+
     > Name:         az-k8s-mysql-server
       Namespace:    default
       Labels:       <none>
@@ -121,13 +123,14 @@ This custom resource can access your Azure subscription and provision/manage azu
       password:                  16 bytes
       username:                  10 bytes
 
-   `kubectl delete -f .` # Delete the Azure resources.
+   `kubectl delete -f .`
+    Delete the Azure resources.
 
 10.) The Secret is created at the end of the resources provisioning. We will use it in a Deployment,
      to create a WP intallation. The Deployment will wait for the resources to be created and then will
      deploy the WP Pod(s).
 
-     ```YAML
+    ```YAML
       apiVersion: apps/v1
       kind: Deployment
       metadata:
@@ -180,7 +183,7 @@ This custom resource can access your Azure subscription and provision/manage azu
               - name: wp-persistent-storage
                 persistentVolumeClaim:
                   claimName: wp-storage
-     ```
+    ```
 11.) Here is the Service, the PVC and the ConfigMap for the Deployment.
 
    ```YAML
@@ -230,11 +233,11 @@ This custom resource can access your Azure subscription and provision/manage azu
         define('WP_REDIS_HOST', 'redis-service');
 
    ```
-12.) `kubectl delete -f .` 
+12.) `kubectl delete -f .`
       To delete the existing resources. Give it a couple of minutes
       and verify the Azure resources have been deleted.
 
-   `kubectl apply -f .` 
+   `kubectl apply -f .`
     To create the Deployment with the Azure Resources.
 
       > mysqldatabase.azure.microsoft.com/az-k8s-mysql-db created
